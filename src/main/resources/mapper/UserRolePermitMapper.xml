@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.p.v2iserver.account.dao.UserRolePermitMapper">
+    <!--获取用户角色权限列表-->
+    <select id="getUserRolePermitList" parameterType="com.p.v2iserver.account.entitys.pojo.UserRolePermitDTO" resultType="com.p.v2iserver.account.entitys.pojo.UserRolePermitVO">
+        SELECT IFNULL(u.id,"-1") as userId,IFNULL(u.username,"-1") as username, IFNULL(u.createTime,"-1") as createTime,IFNULL(u.updateTime,"-1") as updateTime,
+        IFNULL(r.id,"-1") as roleId,IFNULL(r.pid,"-1") as rolePid,IFNULL(r.roleName,"-1") as roleName,
+        IFNULL(r.describes,"-1") as roleDesc,IFNULL(r.clientType,"-1") as clientType,
+        IFNULL(p.id,"-1")  as permitId,IFNULL(p.name,"-1") as permitName,IFNULL(p.pid,"-1") as permitPid,IFNULL(p.isNode,"-1") as isNode,
+        IFNULL(p.describes,"-1") as permitDesc,IFNULL(p.route,"-1") as route
+        from user u
+        LEFT JOIN user_role ur on u.id = ur.userId
+        LEFT JOIN role r on ur.roleId = r.id
+        LEFT JOIN role_permit rp on rp.roleId = r.id
+        LEFT JOIN permit p on rp.permitId = p.id
+        <where>
+            <if test="userId!=null and userId!=-1">
+                AND u.id =#{userId}
+            </if>
+            <if test="username!=null and username!=''">
+                AND u.username =#{username}
+            </if>
+            <if test="password!=null and password!=''">
+                AND u.password =#{password}
+            </if>
+            <if test="createTime != null " >
+                and u.createTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                and u.updateTime = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="roleId!=null and roleId !=-1">
+                AND r.id =#{roleId}
+            </if>
+            <if test="clientType!=null and clientType!=-1">
+                AND r.clientType =#{clientType}
+            </if>
+            <if test="rolePid!=null and rolePid !=-1">
+                AND r.pid =#{rolePid}
+            </if>
+            <if test="roleName!=null and roleName!=''">
+                AND r.roleName =#{roleName}
+            </if>
+            <if test="roleDesc!=null and roleDesc!=''">
+                AND r.roleName =#{roleDesc}
+            </if>
+            <if test="permitId!=null and permitId !=-1">
+                AND p.id =#{permitId}
+            </if>
+            <if test="permitName!=null and permitName !=''">
+                AND p.name like concat('%',#{permitName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="permitPid!=null and permitPid!=-1">
+                AND p.pid =#{permitPid}
+            </if>
+            <if test="isNode!=null and isNode!=-1">
+                AND p.isNode =#{isNode}
+            </if>
+            <if test="permitDesc!=null and permitDesc!=''">
+                AND p.describes like concat('%',#{permitDesc,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="route!=null and route!=''">
+                AND p.route like concat('%',#{route,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

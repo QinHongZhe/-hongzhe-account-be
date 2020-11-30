@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.p.v2iserver.account.dao.RoleMapper">
+
+    <!--添加闭环-->
+    <insert id="setRole" parameterType="com.p.v2iserver.account.entitys.pojo.RoleDTO">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO role
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="pid != null and pid !=-1" >
+                pid,
+            </if>
+            <if test="clientType != null and clientType !=-1" >
+                clientType,
+            </if>
+            <if test="roleName != null and roleName !=''" >
+                roleName,
+            </if>
+            <if test="describes != null and describes !=''" >
+                describes,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="pid != null and pid !=-1" >
+                #{pid,jdbcType=INTEGER},
+            </if>
+            <if test="clientType != null and clientType !=-1" >
+                #{clientType,jdbcType=INTEGER},
+            </if>
+            <if test="roleName != null and roleName !=''" >
+                #{roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="describes != null and describes !=''" >
+                #{describes,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!--修改角色-->
+    <update id="updateRole" parameterType="com.p.v2iserver.account.entitys.pojo.RoleDTO">
+        update role
+        <set>
+            <if test="pid != null and pid !=-1" >
+                pid = #{pid,jdbcType=INTEGER},
+            </if>
+            <if test="clientType != null and clientType !=-1" >
+                clientType= #{clientType,jdbcType=INTEGER},
+            </if>
+            <if test="roleName != null and roleName !=''" >
+                roleName= #{roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="describes != null and describes !=''" >
+                describes = #{describes,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <where>
+            <if test="id != null and id!=-1">
+                id = #{id,jdbcType=INTEGER}
+            </if>
+        </where>
+    </update>
+
+    <delete id="batchDelRole" parameterType="Integer">
+        DELETE FROM role WHERE id IN
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="delRole" parameterType="com.p.v2iserver.account.entitys.pojo.RoleDTO">
+		DELETE FROM role where id = #{id}
+	</delete>
+
+    <!--获取角色列表-->
+    <select id="getRoleList" parameterType="com.p.v2iserver.account.entitys.pojo.RoleDTO" resultType="com.p.v2iserver.account.entitys.pojo.RoleVO">
+        SELECT IFNULL(t.id,"-1") as id,IFNULL(t.pid,"-1") as pid,IFNULL(t.clientType,"-1") as clientType,IFNULL(t.roleName,"-1") as roleName,
+        IFNULL(t.describes,"-1") as describes,IFNULL(t.createTime,"-1") as createTime,IFNULL(t.updateTime,"-1") as updateTime
+        FROM role t
+        <where>
+            <if test="id != null and id !=-1" >
+                and id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="pid != null and pid !=-1" >
+                and (pid = #{pid,jdbcType=INTEGER} or id = #{pid,jdbcType=INTEGER})
+            </if>
+            <if test="clientType != null and clientType !=-1" >
+                and clientType= #{clientType,jdbcType=INTEGER}
+            </if>
+            <if test="roleName!=null and roleName!=''">
+                AND roleName like concat('%',#{roleName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="describes!=null and describes!=''">
+                AND describes like concat('%',#{describes,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="createTime != null " >
+                and  createTime=  #{createTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateTime != null " >
+                and  updateTime=  #{updateTime,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="roleTree" type="com.p.v2iserver.account.entitys.pojo.RoleVO">
+        <id column="id" property="id"></id>
+        <result column="pid" property="pid" />
+        <result column="roleName" property="roleName" />
+        <result column="describes" property="describes" />
+        <result column="clientType" property="clientType" />
+        <collection property="children" ofType="RoleVO" select="getRoleForDown" column="id"></collection>
+        <!--查到的id作为下次的pid-->
+    </resultMap>
+    <select id="getRole" resultMap="roleTree">
+        select IFNULL(t.id,"-1") as id,IFNULL(t.pid,"-1") as pid,IFNULL(t.clientType,"-1") as clientType,IFNULL(t.roleName,"-1") as roleName,
+        IFNULL(t.describes,"-1") as describes,IFNULL(t.createTime,"-1") as createTime,IFNULL(t.updateTime,"-1") as updateTime
+        from role t
+        WHERE t.id=#{pid,jdbcType=INTEGER}
+    </select>
+    <select id="getRoleForDown" resultMap="roleTree" >
+      select IFNULL(t.id,"-1") as id,IFNULL(t.pid,"-1") as pid,IFNULL(t.clientType,"-1") as clientType,IFNULL(t.roleName,"-1") as roleName,
+        IFNULL(t.describes,"-1") as describes,IFNULL(t.createTime,"-1") as createTime,IFNULL(t.updateTime,"-1") as updateTime
+        from role t
+        where t.pid=#{pid,jdbcType=INTEGER}
+     </select>
+</mapper>
