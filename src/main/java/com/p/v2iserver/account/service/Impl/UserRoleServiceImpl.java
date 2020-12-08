@@ -77,6 +77,7 @@ public class UserRoleServiceImpl implements UserRoleService {
             userDTO.setPage(userRoleDTO.getPage());
             userDTO.setId(userRoleDTO.getUserId());
             userDTO.setUsername(userRoleDTO.getUsername());
+            userDTO.setPassword(DigestUtils.md5Hex(userRoleDTO.getPassword()));
             userDTO.setCreateTime(new Date());
             userService.setUser(userDTO, token);
             code  = userRoleMapper.updateUserRole(userRoleDTO);
