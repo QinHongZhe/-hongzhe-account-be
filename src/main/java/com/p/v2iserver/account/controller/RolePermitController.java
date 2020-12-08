@@ -18,7 +18,7 @@ import javax.validation.Valid;
  * @create: 2020-09-08 11:11
  **/
 @RestController
-@RequestMapping(value = {"/rolePermit", "/v1/account"})
+@RequestMapping(value = {"/rolePermit", "/v2/account"})
 @Api(value = "角色权限接口", tags = "RolePermitController", description = "角色权限接口相关")
 public class RolePermitController {
 
