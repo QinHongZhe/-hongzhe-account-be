@@ -60,6 +60,7 @@ public class UserRoleServiceImpl implements UserRoleService {
             userDTO.setLimit(userRoleDTO.getLimit());
             userDTO.setPage(userRoleDTO.getPage());
             userDTO.setUsername(userRoleDTO.getUsername());
+            userDTO.setPassword(DigestUtils.md5Hex(userRoleDTO.getPassword()));
             userDTO.setCreateTime(new Date());
             userDTO.setUpdateTime(userDTO.getCreateTime());
             NResult result = userService.setUser(userDTO, token);
