@@ -94,6 +94,18 @@
             #{id}
         </foreach>
     </delete>
+    <delete id="batchDelRolePermitByPermitId" parameterType="Integer">
+        DELETE FROM role_permit WHERE permitId IN
+        <foreach collection="array" item="permitId" open="(" separator="," close=")">
+            #{permitId}
+        </foreach>
+    </delete>
+    <delete id="batchDelRolePermitByRoleId" parameterType="Integer">
+        DELETE FROM role_permit WHERE roleId IN
+        <foreach collection="array" item="roleId" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </delete>
 
     <delete id="delRolePermit" parameterType="com.p.v2iserver.account.entitys.pojo.RolePermitDTO">
 		DELETE FROM role_permit where id = #{id}

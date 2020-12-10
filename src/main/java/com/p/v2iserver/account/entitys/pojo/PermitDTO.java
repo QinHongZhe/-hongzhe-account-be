@@ -18,4 +18,5 @@ public class PermitDTO extends BaseDTO{
     public Integer isNode;
     public String describes;
     public String  route;
+    public Integer roleId;
 }

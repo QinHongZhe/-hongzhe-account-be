@@ -5,7 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.p.v2iserver.account.dao.RoleMapper;
 import com.p.v2iserver.account.entitys.pojo.RoleDTO;
 import com.p.v2iserver.account.entitys.pojo.RoleVO;
+import com.p.v2iserver.account.service.RolePermitService;
 import com.p.v2iserver.account.service.RoleService;
+import com.p.v2iserver.account.service.UserRoleService;
 import com.p.v2iserver.account.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -26,6 +28,12 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService {
     @Autowired
     RoleMapper roleMapper;
+
+    @Autowired
+    RolePermitService rolePermitService;
+
+    @Autowired
+    UserRoleService userRoleService;
 
     /**
      *
@@ -161,6 +169,8 @@ public class RoleServiceImpl implements RoleService {
             log.debug(message);
             return NResultUtil.error(NStatusMessage.SystemStatus.SYS_FAIL_CODE.getCode(),message,null);
         }
+        userRoleService.batchDelUserRoleByRoleId(roleIds, token);
+        rolePermitService.batchDelRolePermitByRoleId(roleIds, token);
         message = "当前用户:【" + username + "】,该方法【" + "batchDelRole" + "】调用成功！！！";
         log.debug(message);
         return NResultUtil.success(NStatusMessage.SystemStatus.SYS_SUCCESS_CODE.getCode(),message,null);

@@ -4,6 +4,9 @@
 
     <!--添加权限-->
     <insert id="setPermit" parameterType="com.p.v2iserver.account.entitys.pojo.PermitDTO">
+        <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         INSERT INTO permit
         <trim prefix="(" suffix=")" suffixOverrides="," >
             <if test="name != null and name!=''" >
@@ -126,13 +129,20 @@
     </select>
 
     <!--获取权限下关联权限列表-->
-    <select id="getPermitListByPId" parameterType="com.p.v2iserver.account.entitys.pojo.PermitDTO" resultType="com.p.v2iserver.account.entitys.pojo.PermitVO">
-        SELECT *
-        FROM permit t
-        <where>
-            <if test="id!=null and id!=-1">
-                AND t.pid =#{id}
-            </if>
-        </where>
+    <resultMap id="getSelf" type="com.p.v2iserver.account.entitys.pojo.PermitVO">
+        <id column="id" property="id"></id>
+        <result column="name" property="name" />
+        <result column="pid" property="pid" />
+        <result column="isNode" property="isNode" />
+        <result column="describes" property="describes" />
+        <result column="route" property="route" />
+        <collection property="children" ofType="PermitVO" select="getPermitListByPId" column="id"></collection>
+        <!--查到的id作为下次的pid-->
+    </resultMap>
+    <select id="getPermitListByPId" resultMap="getSelf">
+      SELECT IFNULL(t.id,"-1")  as id,IFNULL(t.name,"-1") as name,IFNULL(t.pid,"-1") as pid,IFNULL(t.isNode,"-1") as isNode,IFNULL(t.describes,"-1") as describes,IFNULL(t.route,"-1") as route,
+        IFNULL(t.createTime,"-1") as createTime ,IFNULL(t.updateTime,"-1") as updateTime
+      from permit t
+      where t.pid = #{pid}
     </select>
 </mapper>

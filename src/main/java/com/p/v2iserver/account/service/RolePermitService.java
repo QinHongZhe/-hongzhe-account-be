@@ -16,5 +16,9 @@ public interface RolePermitService {
 
     NResult batchDelRolePermit(Integer[] rolePermitIds, String token);
 
+    NResult batchDelRolePermitByPermitId(Integer[] rolePermitIds, String token);
+
+    NResult batchDelRolePermitByRoleId(Integer[] rolePermitIds, String token);
+
     NResult setRolePermits(RolePermitDTO rolePermitDTO, String token);
 }

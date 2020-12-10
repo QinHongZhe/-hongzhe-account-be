@@ -21,5 +21,9 @@ public interface UserRoleMapper {
 
     int batchDelUserRole(Integer[] userRoleIds);
 
+    int batchDelUserRoleByUserId(Integer[] userIds);
+
+    int batchDelUserRoleByRoleId(Integer[] roleIds);
+
     int delUserRole(UserRoleDTO userRoleDTO);
 }

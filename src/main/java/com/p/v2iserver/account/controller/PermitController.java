@@ -116,7 +116,7 @@ public class PermitController {
             nResult.setMessage(message);
             return nResult;
         }
-        nResult = permitService.getPermitListByPId(permitDTO,token);
+//        nResult = permitService.getPermitListByPId(permitDTO,token);
         return nResult;
     }
 

@@ -15,4 +15,8 @@ public interface UserRoleService {
     NResult getUserRoleList(UserRoleDTO userRoleDTO, String token);
 
     NResult batchDelUserRole(Integer[] userRoleIds, String token);
+
+    NResult batchDelUserRoleByUserId(Integer[] userRoleIds, String token);
+
+    NResult batchDelUserRoleByRoleId(Integer[] userRoleIds, String token);
 }

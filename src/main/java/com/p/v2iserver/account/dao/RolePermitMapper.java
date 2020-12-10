@@ -17,6 +17,10 @@ public interface RolePermitMapper {
 
     int batchDelRolePermit(Integer[] rolePermitIds);
 
+    int batchDelRolePermitByPermitId(Integer[] rolePermitIds);
+
+    int batchDelRolePermitByRoleId(Integer[] rolePermitIds);
+
     int delRolePermit(RolePermitDTO rolePermitDTO);
 
     int setRolePermits(RolePermitDTO rolePermitDTO);

@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.p.v2iserver.account.dao.UserMapper;
 import com.p.v2iserver.account.entitys.pojo.UserDTO;
 import com.p.v2iserver.account.entitys.pojo.UserVO;
+import com.p.v2iserver.account.service.UserRoleService;
 import com.p.v2iserver.account.service.UserService;
 import com.p.v2iserver.account.utils.*;
 import lombok.extern.log4j.Log4j2;
@@ -27,6 +28,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    UserRoleService userRoleService;
 
     @Autowired
     RedisUtils redisUtils;
@@ -132,6 +136,7 @@ public class UserServiceImpl implements UserService {
             log.debug(message);
             return NResultUtil.error(NStatusMessage.SystemStatus.SYS_FAIL_CODE.getCode(),message,null);
         }
+        userRoleService.batchDelUserRoleByUserId(userIds, token);
         message = "当前用户:【" + username + "】,该方法【" + "batchDelUser" + "】调用成功！！！";
         log.debug(message);
         return NResultUtil.success(NStatusMessage.SystemStatus.SYS_SUCCESS_CODE.getCode(),message,null);

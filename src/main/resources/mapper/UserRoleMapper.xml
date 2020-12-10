@@ -112,6 +112,18 @@
             #{id}
         </foreach>
     </delete>
+    <delete id="batchDelUserRoleByUserId" parameterType="Integer">
+        DELETE FROM user_role WHERE userId IN
+        <foreach collection="array" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+    <delete id="batchDelUserRoleByRoleId" parameterType="Integer">
+        DELETE FROM user_role WHERE roleId IN
+        <foreach collection="array" item="roleId" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+    </delete>
 
     <delete id="delUserRole" parameterType="com.p.v2iserver.account.entitys.pojo.UserRoleDTO">
 		DELETE FROM user_role where id = #{id}

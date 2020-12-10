@@ -3,9 +3,7 @@ package com.p.v2iserver.account.service.Impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.p.v2iserver.account.dao.PermitMapper;
-import com.p.v2iserver.account.entitys.pojo.PermitDTO;
-import com.p.v2iserver.account.entitys.pojo.PermitVO;
-import com.p.v2iserver.account.entitys.pojo.RolePermitDTO;
+import com.p.v2iserver.account.entitys.pojo.*;
 import com.p.v2iserver.account.service.PermitService;
 import com.p.v2iserver.account.service.RolePermitService;
 import com.p.v2iserver.account.utils.*;
@@ -65,6 +63,11 @@ public class PermitServiceImpl implements PermitService {
             code  = permitMapper.delPermit(permitDTO);
             type = "删除";
         }
+        RolePermitDTO rolePermitDTO = new RolePermitDTO();
+        rolePermitDTO.setPermitId(permitDTO.getId());
+        rolePermitDTO.setRoleId(permitDTO.getRoleId());
+        rolePermitDTO.setType(permitDTO.getType());
+        rolePermitService.setRolePermit(rolePermitDTO,token);
         if(code < MagicNumberConstant.ONE) {
             message = "当前用户:【" + username + "】,该方法【" + "setPermit" + "】"+type+"调用失败！！！";
             log.debug(message);
@@ -197,6 +200,7 @@ public class PermitServiceImpl implements PermitService {
             log.debug(message);
             return NResultUtil.error(NStatusMessage.SystemStatus.SYS_FAIL_CODE.getCode(),message,null);
         }
+        this.rolePermitService.batchDelRolePermitByPermitId(permitIds, token);
         message = "当前用户:【" + username + "】,该方法【" + "batchDelPermit" + "】调用成功！！！";
         log.debug(message);
         return NResultUtil.success(NStatusMessage.SystemStatus.SYS_SUCCESS_CODE.getCode(),message,null);

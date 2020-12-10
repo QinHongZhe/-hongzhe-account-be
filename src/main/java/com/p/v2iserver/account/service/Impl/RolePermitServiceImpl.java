@@ -139,6 +139,63 @@ public class RolePermitServiceImpl implements RolePermitService {
 
     /**
      *
+     * TODO 根据权限删除角色-权限关联
+     * @author Pactera
+     * @date 2020-12-10 13:27:12
+     * @param: rolePermitIds
+     * @param: token
+     * @return com.p.v2iserver.account.utils.NResult
+     **/
+    @Override
+    public NResult batchDelRolePermitByPermitId(Integer[] rolePermitIds, String token) {
+        String message;
+        String username ;
+        Object obj =  JwtTokenUtils.tokenTimeOut(token,"batchDelRolePermitByPermitId");
+        if(obj instanceof NResult){
+            return (NResult) obj;
+        }
+        username = (String) obj;
+        int code = rolePermitMapper.batchDelRolePermitByPermitId(rolePermitIds);
+        if(code!=rolePermitIds.length){
+            message = "当前用户:【" + username + "】,该方法【" + "batchDelRolePermitByPermitId" + "】调用失败！！！";
+            log.debug(message);
+            return NResultUtil.error(NStatusMessage.SystemStatus.SYS_FAIL_CODE.getCode(),message,null);
+        }
+        message = "当前用户:【" + username + "】,该方法【" + "batchDelRolePermitByPermitId" + "】调用成功！！！";
+        log.debug(message);
+        return NResultUtil.success(NStatusMessage.SystemStatus.SYS_SUCCESS_CODE.getCode(),message,null);
+    }
+
+    /**
+     *
+     * TODO 根据角色删除角色-权限关联
+     * @author Pactera
+     * @date 2020-12-10 13:27:53
+     * @param: roleIds
+     * @param: token
+     * @return com.p.v2iserver.account.utils.NResult
+     **/
+    @Override
+    public NResult batchDelRolePermitByRoleId(Integer[] roleIds, String token) {
+        String message;
+        String username ;
+        Object obj =  JwtTokenUtils.tokenTimeOut(token,"batchDelRolePermitByPermitId");
+        if(obj instanceof NResult){
+            return (NResult) obj;
+        }
+        username = (String) obj;
+        int code = rolePermitMapper.batchDelRolePermitByRoleId(roleIds);
+        if(code!=roleIds.length){
+            message = "当前用户:【" + username + "】,该方法【" + "batchDelRolePermitByPermitId" + "】调用失败！！！";
+            log.debug(message);
+            return NResultUtil.error(NStatusMessage.SystemStatus.SYS_FAIL_CODE.getCode(),message,null);
+        }
+        message = "当前用户:【" + username + "】,该方法【" + "batchDelRolePermitByPermitId" + "】调用成功！！！";
+        log.debug(message);
+        return NResultUtil.success(NStatusMessage.SystemStatus.SYS_SUCCESS_CODE.getCode(),message,null);
+    }
+    /**
+     *
      * TODO 角色权限批量管理
      * @author Pactera
      * @date 2020-11-16 14:56:52

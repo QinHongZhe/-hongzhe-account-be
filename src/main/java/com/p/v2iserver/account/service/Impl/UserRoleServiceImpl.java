@@ -12,6 +12,7 @@ import com.p.v2iserver.account.service.UserService;
 import com.p.v2iserver.account.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,7 +61,7 @@ public class UserRoleServiceImpl implements UserRoleService {
             userDTO.setLimit(userRoleDTO.getLimit());
             userDTO.setPage(userRoleDTO.getPage());
             userDTO.setUsername(userRoleDTO.getUsername());
-            userDTO.setPassword(userRoleDTO.getPassword());
+            userDTO.setPassword(StringUtils.isBlank(userRoleDTO.getPassword()) ? "654321" : userRoleDTO.getPassword());
             userDTO.setCreateTime(new Date());
             userDTO.setUpdateTime(userDTO.getCreateTime());
             NResult result = userService.setUser(userDTO, token);
@@ -77,7 +78,9 @@ public class UserRoleServiceImpl implements UserRoleService {
             userDTO.setPage(userRoleDTO.getPage());
             userDTO.setId(userRoleDTO.getUserId());
             userDTO.setUsername(userRoleDTO.getUsername());
-            userDTO.setPassword(userRoleDTO.getPassword());
+            if(StringUtils.isNotBlank(userRoleDTO.getPassword())){
+                userDTO.setPassword(userRoleDTO.getPassword());
+            }
             userDTO.setCreateTime(new Date());
             userService.setUser(userDTO, token);
             code  = userRoleMapper.updateUserRole(userRoleDTO);
@@ -186,6 +189,64 @@ public class UserRoleServiceImpl implements UserRoleService {
         username = (String) obj;
         int code = userRoleMapper.batchDelUserRole(userRoleIds);
         if(code!=userRoleIds.length){
+            message = "当前用户:【" + username + "】,该方法【" + "batchDelUserRole" + "】调用失败！！！";
+            log.debug(message);
+            return NResultUtil.error(NStatusMessage.SystemStatus.SYS_FAIL_CODE.getCode(),message,null);
+        }
+        message = "当前用户:【" + username + "】,该方法【" + "batchDelUserRole" + "】调用成功！！！";
+        log.debug(message);
+        return NResultUtil.success(NStatusMessage.SystemStatus.SYS_SUCCESS_CODE.getCode(),message,null);
+    }
+
+    /**
+     *
+     * TODO 根据用户删除用户-角色关联
+     * @author Pactera
+     * @date 2020-12-10 13:26:52
+     * @param: userIds
+     * @param: token
+     * @return com.p.v2iserver.account.utils.NResult
+     **/
+    @Override
+    public NResult batchDelUserRoleByUserId(Integer[] userIds, String token) {
+        String message;
+        String username ;
+        Object obj =  JwtTokenUtils.tokenTimeOut(token,"batchDelUserRole");
+        if(obj instanceof NResult){
+            return (NResult) obj;
+        }
+        username = (String) obj;
+        int code = userRoleMapper.batchDelUserRoleByUserId(userIds);
+        if(code!=userIds.length){
+            message = "当前用户:【" + username + "】,该方法【" + "batchDelUserRole" + "】调用失败！！！";
+            log.debug(message);
+            return NResultUtil.error(NStatusMessage.SystemStatus.SYS_FAIL_CODE.getCode(),message,null);
+        }
+        message = "当前用户:【" + username + "】,该方法【" + "batchDelUserRole" + "】调用成功！！！";
+        log.debug(message);
+        return NResultUtil.success(NStatusMessage.SystemStatus.SYS_SUCCESS_CODE.getCode(),message,null);
+    }
+
+    /**
+     *
+     * TODO 根据角色删除用户-角色关联
+     * @author Pactera
+     * @date 2020-12-10 13:26:22
+     * @param: roleIds
+     * @param: token
+     * @return com.p.v2iserver.account.utils.NResult
+     **/
+    @Override
+    public NResult batchDelUserRoleByRoleId(Integer[] roleIds, String token) {
+        String message;
+        String username ;
+        Object obj =  JwtTokenUtils.tokenTimeOut(token,"batchDelUserRole");
+        if(obj instanceof NResult){
+            return (NResult) obj;
+        }
+        username = (String) obj;
+        int code = userRoleMapper.batchDelUserRoleByRoleId(roleIds);
+        if(code!=roleIds.length){
             message = "当前用户:【" + username + "】,该方法【" + "batchDelUserRole" + "】调用失败！！！";
             log.debug(message);
             return NResultUtil.error(NStatusMessage.SystemStatus.SYS_FAIL_CODE.getCode(),message,null);
