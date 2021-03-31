@@ -10,7 +10,6 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import jdk.nashorn.internal.objects.NativeRangeError;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
